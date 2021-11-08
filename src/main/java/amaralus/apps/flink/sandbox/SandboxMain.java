@@ -1,5 +1,6 @@
 package amaralus.apps.flink.sandbox;
 
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -14,6 +15,19 @@ public class SandboxMain {
     public static void main(String[] args) throws Exception {
         var env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+        env.fromElements(
+                "this is first sentence",
+                "but i want more strings")
+                .flatMap((sentence, collector) -> { for (var word : sentence.split(" ")) collector.collect(word); },
+                        TypeInformation.of(String.class))
+                .keyBy(str -> str.charAt(0))
+                .reduce((prev, current) -> prev + " " + current)
+                .print();
+
+        env.execute("flat map");
+    }
+
+    public static void exampleStream(StreamExecutionEnvironment env) throws Exception {
         env.addSource(new SensorSource())
                 .assignTimestampsAndWatermarks(forBoundedOutOfOrderness(ofSeconds(1)))
                 .map(SandboxMain::toCelsius)
@@ -22,7 +36,7 @@ public class SandboxMain {
                 .apply(SandboxMain::apply)
                 .print();
 
-        env.execute("Cumpute avg temp");
+        env.execute("Compute avg temp");
     }
 
     public static SensorData toCelsius(SensorData sensorData) {

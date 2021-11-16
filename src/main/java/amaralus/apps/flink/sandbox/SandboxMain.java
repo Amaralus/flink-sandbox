@@ -1,6 +1,6 @@
 package amaralus.apps.flink.sandbox;
 
-import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -18,8 +18,7 @@ public class SandboxMain {
         env.fromElements(
                 "this is first sentence",
                 "but i want more strings")
-                .flatMap((sentence, collector) -> { for (var word : sentence.split(" ")) collector.collect(word); },
-                        TypeInformation.of(String.class))
+                .flatMap((sentence, collector) -> { for (var word : sentence.split(" ")) collector.collect(word); }, Types.STRING)
                 .keyBy(str -> str.charAt(0))
                 .reduce((prev, current) -> prev + " " + current)
                 .print();

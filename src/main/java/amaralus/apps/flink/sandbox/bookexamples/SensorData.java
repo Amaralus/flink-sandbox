@@ -1,4 +1,4 @@
-package amaralus.apps.flink.sandbox;
+package amaralus.apps.flink.sandbox.bookexamples;
 
 public class SensorData {
 

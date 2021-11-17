@@ -1,4 +1,4 @@
-package amaralus.apps.flink.sandbox;
+package amaralus.apps.flink.sandbox.bookexamples;
 
 import org.apache.flink.streaming.api.functions.source.RichParallelSourceFunction;
 

@@ -35,4 +35,13 @@ public class SensorData {
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
+
+    @Override
+    public String toString() {
+        return "SensorData{" +
+                "id='" + id + '\'' +
+                ", timestamp=" + timestamp +
+                ", temperature=" + temperature +
+                '}';
+    }
 }

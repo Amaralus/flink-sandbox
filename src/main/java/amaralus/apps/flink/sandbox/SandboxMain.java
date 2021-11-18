@@ -1,14 +1,19 @@
 package amaralus.apps.flink.sandbox;
 
+import amaralus.apps.flink.sandbox.bookexamples.BookAppCoProcess;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class SandboxMain {
 
     public static void main(String[] args) throws Exception {
-        var env = StreamExecutionEnvironment.getExecutionEnvironment();
+        var environment = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.fromElements(
+        new BookAppCoProcess(environment).run();
+    }
+
+    private static void simpleProcessing(StreamExecutionEnvironment environment) throws Exception {
+        environment.fromElements(
                 "this is first sentence",
                 "but i want more strings")
                 .flatMap((sentence, collector) -> { for (var word : sentence.split(" ")) collector.collect(word); }, Types.STRING)
@@ -16,7 +21,7 @@ public class SandboxMain {
                 .reduce((prev, current) -> prev + " " + current)
                 .print();
 
-        env.execute("flat map");
+        environment.execute("flat map");
     }
 }
 
